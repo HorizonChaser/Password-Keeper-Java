@@ -53,7 +53,13 @@ public class Main extends Application {
             }
 
             if(result.get() == newFileButton) {
-                System.out.println("NEW SAVE FILE");
+                Parent newFile = FXMLLoader.load(getClass().getResource("newUserDialog.fxml"));
+                Stage newFileStage = new Stage();
+                newFileStage.setTitle("Initialize new user database");
+
+                newFileStage.setScene(new Scene(newFile));
+                newFileStage.showAndWait();
+
             } else if(result.get() == chooseFileButton) {
                 System.out.println("CHOOSE MANUALLY");
             } else {

@@ -3,6 +3,8 @@ package io.github.horizonchaser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class LoginConsoleController {
 
@@ -18,6 +20,20 @@ public class LoginConsoleController {
     @FXML
     private PasswordField passwordField;
 
+    @FXML
+    private PasswordField newPasswordField;
+
+    @FXML
+    private PasswordField repeatField;
+
+    @FXML
+    private TextField newUsernameField;
+
+    @FXML
+    private Label passwordStrengthIndicator;
+
+    @FXML
+    private Label repeatPasswordIndicator;
 
     @FXML
     void loginButtonAction(ActionEvent event) {
@@ -39,4 +55,23 @@ public class LoginConsoleController {
         alert.showAndWait();
     }
 
+    public void showPasswordComplexity() {
+        if(newPasswordField.getText().matches(CommonDefinition.passwordPattern)) {
+            passwordStrengthIndicator.setText("Strong");
+            passwordStrengthIndicator.setTextFill(Color.GREEN);
+        } else {
+            passwordStrengthIndicator.setText("Weak");
+            passwordStrengthIndicator.setTextFill(Color.RED);
+        }
+    }
+
+    public void checkRepeat() {
+        if(newPasswordField.getText().equals(repeatField.getText())) {
+            repeatPasswordIndicator.setText("Matched");
+            repeatPasswordIndicator.setTextFill(Color.GREEN);
+        } else {
+            repeatPasswordIndicator.setText("Mismatch");
+            repeatPasswordIndicator.setTextFill(Color.RED);
+        }
+    }
 }
