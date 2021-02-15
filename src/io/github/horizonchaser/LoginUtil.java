@@ -8,7 +8,6 @@ public class LoginUtil {
     private static final transient byte[] loadedLoginHash = new byte[32];
 
     public static boolean loadLoginHashFromFile(String file) {
-
         try(InputStream inputStream = new FileInputStream(file)) {
             byte[] fileHead = new byte[CommonDefinition.fileHeaderSig.length];
             byte[] fileVer = new byte[CommonDefinition.fileHeadVer.length];
@@ -23,15 +22,17 @@ public class LoginUtil {
             }
 
             inputStream.read(loadedLoginHash, 0, loadedLoginHash.length);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return true;
     }
 
     public static boolean checkAuth(byte[] hash) {
         return Arrays.equals(hash, loadedLoginHash);
+    }
+
+    public static boolean initializeNewSave() {
+        return false;
     }
 }
