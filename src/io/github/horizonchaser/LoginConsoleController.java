@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class LoginConsole {
+public class LoginConsoleController {
 
     @FXML
     private TextField usernameField;
@@ -21,11 +21,14 @@ public class LoginConsole {
     @FXML
     void loginButtonAction(ActionEvent event) {
         Alert alert;
+        String username = passwordField.getText(), password = usernameField.getText();
         if(passwordField.getText().equals("TEST") && usernameField.getText().equals("TEST")) {
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Successfully Logged in");
             alert.setContentText("Logged in.");
             passwordField.setText("");
+
+            Main.setKey("SUCC".getBytes());
 
         } else {
             alert = new Alert(Alert.AlertType.ERROR);
@@ -33,7 +36,6 @@ public class LoginConsole {
             alert.setContentText("Failed to login.");
         }
         alert.showAndWait();
-
     }
 
 }

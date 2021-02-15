@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="407.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.horizonchaser.LoginConsole">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="407.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.horizonchaser.LoginConsoleController">
    <children>
       <Label fx:id="UserLabel" layoutX="50.0" layoutY="99.0" prefHeight="28.0" prefWidth="78.0" text="Username" />
       <Label layoutX="50.0" layoutY="161.0" prefHeight="28.0" prefWidth="78.0" text="Password" />
