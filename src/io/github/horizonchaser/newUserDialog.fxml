@@ -16,9 +16,9 @@
       <Label layoutX="99.0" layoutY="110.0" text="Username" />
       <Label layoutX="101.0" layoutY="157.0" text="Password" />
       <Label layoutX="55.0" layoutY="205.0" text="Repeat password" />
-      <TextField fx:id="newUsernameField" layoutX="182.0" layoutY="105.0" prefHeight="28.0" prefWidth="175.0" />
-      <PasswordField fx:id="newPasswordField" layoutX="182.0" layoutY="152.0" onKeyTyped="#showPasswordComplexity" prefHeight="28.0" prefWidth="175.0" />
-      <PasswordField fx:id="repeatField" layoutX="182.0" layoutY="200.0" onKeyTyped="#checkRepeat" />
+      <TextField fx:id="newUsernameField" layoutX="182.0" layoutY="105.0" prefHeight="28.0" prefWidth="175.0" text="Horizon" />
+      <PasswordField fx:id="newPasswordField" layoutX="182.0" layoutY="152.0" onKeyTyped="#showPasswordComplexity" prefHeight="28.0" prefWidth="175.0" text="1234" />
+      <PasswordField fx:id="repeatField" layoutX="182.0" layoutY="200.0" onKeyTyped="#checkRepeat" text="1234" />
       <Label fx:id="passwordStrengthIndicator" layoutX="366.0" layoutY="157.0" prefHeight="18.0" prefWidth="101.0" text="              " />
       <Label fx:id="repeatPasswordIndicator" layoutX="366.0" layoutY="205.0" prefHeight="18.0" prefWidth="101.0" text="        " />
       <Button fx:id="newConfirmButton" layoutX="125.0" layoutY="265.0" mnemonicParsing="false" onAction="#newUserConfirm" text="Confirm" />

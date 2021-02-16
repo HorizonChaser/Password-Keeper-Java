@@ -5,9 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class LoginConsoleController {
+import java.io.File;
+
+public class LoginConsoleController extends Main {
 
     @FXML
     private Button newCancelButton;
@@ -44,6 +47,12 @@ public class LoginConsoleController {
 
     @FXML
     private Pane newUserPane;
+
+    @FXML
+    private TextField currUsingField;
+
+    @FXML
+    private Button loginBrowseButton;
 
     private boolean isStrong = false, isRepeatCorrect = false;
 
@@ -93,6 +102,9 @@ public class LoginConsoleController {
     }
 
     public void newUserConfirm() {
+        showPasswordComplexity();
+        checkRepeat();
+
         if(!isStrong) {
             Alert notStrongAlert = new Alert(Alert.AlertType.WARNING);
             notStrongAlert.setTitle("Weak password detected");
@@ -114,7 +126,24 @@ public class LoginConsoleController {
         newPasswordField.setText("");
         repeatField.setText("");
 
-        System.out.println(new String(Main.key));
+        System.out.println(CryptoUtil.bytes2Hex(Main.key));
+
+        FileChooser saveFileChooser = new FileChooser();
+        saveFileChooser.setInitialDirectory(new File("."));
+        saveFileChooser.setTitle("Save the database at...");
+        saveFileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JPK Database File", "*.JPK"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File selectedFile = saveFileChooser.showSaveDialog(newUserPane.getScene().getWindow());
+
+        if(selectedFile == null) {
+            return;
+        }
+
+        FileUtil.initializeDB(selectedFile.getAbsolutePath(), Main.key);
+        new Alert(Alert.AlertType.INFORMATION, "New database created as "
+                + selectedFile.getAbsolutePath()).showAndWait();
     }
 
     public void newUserCancel() {
