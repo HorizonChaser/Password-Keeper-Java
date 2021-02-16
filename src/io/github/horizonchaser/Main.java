@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class Main extends Application {
 
-    private transient static byte[] key;
+    transient static byte[] key;
     private transient static boolean isLoggedIn = false;
 
     public static void setIsLoggedIn(boolean isLoggedIn) {

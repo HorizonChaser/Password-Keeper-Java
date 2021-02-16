@@ -3,10 +3,14 @@ package io.github.horizonchaser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
 public class LoginConsoleController {
+
+    @FXML
+    private Button newCancelButton;
 
     @FXML
     private TextField usernameField;
@@ -36,10 +40,18 @@ public class LoginConsoleController {
     private Label repeatPasswordIndicator;
 
     @FXML
+    private Button newConfirmButton;
+
+    @FXML
+    private Pane newUserPane;
+
+    private boolean isStrong = false, isRepeatCorrect = false;
+
+    @FXML
     void loginButtonAction(ActionEvent event) {
         Alert alert;
         String username = passwordField.getText(), password = usernameField.getText();
-        if(passwordField.getText().equals("TEST") && usernameField.getText().equals("TEST")) {
+        if (passwordField.getText().equals("TEST") && usernameField.getText().equals("TEST")) {
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Successfully Logged in");
             alert.setContentText("Logged in.");
@@ -56,22 +68,57 @@ public class LoginConsoleController {
     }
 
     public void showPasswordComplexity() {
-        if(newPasswordField.getText().matches(CommonDefinition.passwordPattern)) {
+        if (newPasswordField.getText().matches(CommonDefinition.passwordPattern)) {
             passwordStrengthIndicator.setText("Strong");
             passwordStrengthIndicator.setTextFill(Color.GREEN);
+            isStrong = true;
         } else {
             passwordStrengthIndicator.setText("Weak");
             passwordStrengthIndicator.setTextFill(Color.RED);
+            isStrong = false;
         }
+        checkRepeat();
     }
 
     public void checkRepeat() {
-        if(newPasswordField.getText().equals(repeatField.getText())) {
+        if (newPasswordField.getText().equals(repeatField.getText())) {
             repeatPasswordIndicator.setText("Matched");
             repeatPasswordIndicator.setTextFill(Color.GREEN);
+            isRepeatCorrect = true;
         } else {
             repeatPasswordIndicator.setText("Mismatch");
             repeatPasswordIndicator.setTextFill(Color.RED);
+            isRepeatCorrect = false;
         }
+    }
+
+    public void newUserConfirm() {
+        if(!isStrong) {
+            Alert notStrongAlert = new Alert(Alert.AlertType.WARNING);
+            notStrongAlert.setTitle("Weak password detected");
+            notStrongAlert.setHeaderText("This password is used to protect your other passwords, so it needs to be especially strong.");
+            notStrongAlert.setContentText("In short, it should meet following requirements:"
+                    + "\n    1. At least 8 characters long"
+                    + "\n    2. At least contains one uppercase letter, one lowercase letter, one digit and one symbol each");
+            notStrongAlert.showAndWait();
+        }
+
+        if(!isRepeatCorrect) {
+            Alert notCorrectAlert = new Alert(Alert.AlertType.WARNING);
+            notCorrectAlert.setTitle("Repeat password not matched");
+            notCorrectAlert.setHeaderText("Your repeat password doesn't consist with first one. Check it :)");
+            notCorrectAlert.showAndWait();
+        }
+
+        Main.setKey(CryptoUtil.calUserLoginHash(newUsernameField.getText(), newPasswordField.getText()));
+        newPasswordField.setText("");
+        repeatField.setText("");
+
+        System.out.println(new String(Main.key));
+    }
+
+    public void newUserCancel() {
+        Stage currStage = (Stage) newCancelButton.getScene().getWindow();
+        currStage.close();
     }
 }
