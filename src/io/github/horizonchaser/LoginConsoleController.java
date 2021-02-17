@@ -2,13 +2,20 @@ package io.github.horizonchaser;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import javax.xml.crypto.Data;
 import java.io.File;
+import java.sql.DataTruncation;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 
 public class LoginConsoleController extends Main {
 
@@ -49,7 +56,7 @@ public class LoginConsoleController extends Main {
     private Pane newUserPane;
 
     @FXML
-    private TextField currUsingField;
+    private TextArea currUsingField;
 
     @FXML
     private Button loginBrowseButton;
@@ -57,23 +64,63 @@ public class LoginConsoleController extends Main {
     private boolean isStrong = false, isRepeatCorrect = false;
 
     @FXML
+    void loginBrowseButtonAction(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("."));
+        fileChooser.setTitle("Save the database at...");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JPK Database File", "*.JPK"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File chosenFile = fileChooser.showOpenDialog(loginBrowseButton.getScene().getWindow());
+
+        if(chosenFile != null) {
+            Main.currSaveFilePath = chosenFile.getAbsolutePath();
+            currUsingField.setText(chosenFile.getAbsolutePath());
+        } else {
+            return;
+        }
+
+        try {
+            FileUtil.loadUserHashFromDB(chosenFile);
+        } catch (JPKFileException j) {
+            Main.currSaveFilePath = "";
+            currUsingField.setText("");
+
+            Alert loadFailedAlert = new Alert(Alert.AlertType.ERROR);
+            loadFailedAlert.setTitle("Failed to load selected database file");
+            loadFailedAlert.setHeaderText("Due to following reason, JPK failed to load "
+                    + chosenFile.getAbsolutePath() + "as database.");
+            loadFailedAlert.setContentText(j.getLocalizedMessage());
+            loadFailedAlert.showAndWait();
+        }
+    }
+
+    @FXML
     void loginButtonAction(ActionEvent event) {
         Alert alert;
-        String username = passwordField.getText(), password = usernameField.getText();
-        if (passwordField.getText().equals("TEST") && usernameField.getText().equals("TEST")) {
+        String username = usernameField.getText(), password = passwordField.getText();
+        byte[] hash = CryptoUtil.calUserLoginHash(username, password);
+        if (Arrays.equals(hash, Main.key)) {
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Successfully Logged in");
-            alert.setContentText("Logged in.");
+            alert.setTitle("Successfully logged in");
+            alert.setHeaderText("You have successfully logged in at " + sdf.format(date));
+            alert.setContentText("Please take care about your passwords, and remember to save when exit.");
             passwordField.setText("");
 
-            Main.setKey("SUCC".getBytes());
+            ((Stage) loginButton.getScene().getWindow()).close();
+            alert.showAndWait();
 
         } else {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Password or Username Incorrect");
             alert.setContentText("Failed to login.");
+            alert.showAndWait();
         }
-        alert.showAndWait();
+
     }
 
     public void showPasswordComplexity() {
@@ -126,7 +173,7 @@ public class LoginConsoleController extends Main {
         newPasswordField.setText("");
         repeatField.setText("");
 
-        System.out.println(CryptoUtil.bytes2Hex(Main.key));
+        System.out.println(CryptoUtil.bytesToHex(Main.key));
 
         FileChooser saveFileChooser = new FileChooser();
         saveFileChooser.setInitialDirectory(new File("."));
@@ -141,9 +188,12 @@ public class LoginConsoleController extends Main {
             return;
         }
 
-        FileUtil.initializeDB(selectedFile.getAbsolutePath(), Main.key);
-        new Alert(Alert.AlertType.INFORMATION, "New database created as "
-                + selectedFile.getAbsolutePath()).showAndWait();
+        FileUtil.initializeNewDB(selectedFile.getAbsolutePath(), Main.key);
+        Alert createdAlert = new Alert(Alert.AlertType.INFORMATION, "New database created as "
+                + selectedFile.getAbsolutePath());
+        createdAlert.showAndWait();
+
+        ((Stage) newUserPane.getScene().getWindow()).close();
     }
 
     public void newUserCancel() {

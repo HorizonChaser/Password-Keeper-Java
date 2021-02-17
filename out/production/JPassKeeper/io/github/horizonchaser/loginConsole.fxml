@@ -24,7 +24,11 @@
       <Button fx:id="loginButton" layoutX="72.0" layoutY="263.0" mnemonicParsing="false" onAction="#loginButtonAction" prefHeight="28.0" prefWidth="310.0" text="Login !" />
       <PasswordField fx:id="passwordField" layoutX="151.0" layoutY="179.0" />
       <Label alignment="CENTER_RIGHT" layoutX="30.0" layoutY="79.0" prefHeight="18.0" prefWidth="98.0" text="Current using" />
-      <TextField fx:id="currUsingField" layoutX="151.0" layoutY="74.0" />
-      <Button fx:id="loginBrowseButton" layoutX="352.0" layoutY="74.0" mnemonicParsing="false" text="Browse..." />
+      <Button fx:id="loginBrowseButton" layoutX="352.0" layoutY="74.0" mnemonicParsing="false" onAction="#loginBrowseButtonAction" text="Browse..." />
+      <TextArea fx:id="currUsingField" editable="false" layoutX="151.0" layoutY="74.0" maxHeight="28.0" prefHeight="28.0" prefWidth="175.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </TextArea>
    </children>
 </AnchorPane>

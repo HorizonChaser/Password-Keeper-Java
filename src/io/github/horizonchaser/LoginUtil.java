@@ -10,14 +10,14 @@ public class LoginUtil {
     public static boolean loadLoginHashFromFile(String file) {
         try(InputStream inputStream = new FileInputStream(file)) {
             byte[] fileHead = new byte[CommonDefinition.fileHeaderSig.length];
-            byte[] fileVer = new byte[CommonDefinition.fileHeadVer.length];
+            byte[] fileVer = new byte[CommonDefinition.fileHeaderVer.length];
             inputStream.read(fileHead, 0, fileHead.length);
             inputStream.read(fileVer, 0, fileVer.length);
 
             if(!Arrays.equals(fileHead, CommonDefinition.fileHeaderSig)){
                 throw new JPKFileException("File head signature not match");
             }
-            if(!Arrays.equals(fileVer, CommonDefinition.fileHeadVer)) {
+            if(!Arrays.equals(fileVer, CommonDefinition.fileHeaderVer)) {
                 throw new JPKFileException("File version not match");
             }
 

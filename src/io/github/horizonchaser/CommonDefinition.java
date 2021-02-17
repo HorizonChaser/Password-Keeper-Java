@@ -2,7 +2,8 @@ package io.github.horizonchaser;
 
 public class CommonDefinition {
     public static final byte[] fileHeaderSig = "JPK-Head".getBytes();
-    public static final byte[] fileHeadVer = "0001".getBytes();
+    public static final byte[] fileHeaderVer = "0001".getBytes();
+    public static final int fileHeaderSizeInByte = fileHeaderSig.length + fileHeaderVer.length + 32 + 4;
 
     public static final String defaultSaveName = "saved.jpk";
 

@@ -48,7 +48,7 @@ public class CryptoUtil {
      * @param bytes source
      * @return hex string
      */
-    public static String bytes2Hex(byte[] bytes) {
+    public static String bytesToHex(byte[] bytes) {
         StringBuilder des = new StringBuilder();
         String tmp;
         for (byte bt : bytes) {
@@ -67,7 +67,7 @@ public class CryptoUtil {
      * @param integer source
      * @return byte[], equals to integer
      */
-    public static byte[] int2Bytes(int integer) {
+    public static byte[] intToBytes(int integer) {
         byte[] bytes = new byte[4];
         bytes[3] = (byte) (integer >> 24);
         bytes[2] = (byte) (integer >> 16);
@@ -77,8 +77,17 @@ public class CryptoUtil {
         return bytes;
     }
 
+    //byte 数组与 int 的相互转换
+    public static int bytesToInt(byte[] b) {
+        return b[3] & 0xFF |
+                (b[2] & 0xFF) << 8 |
+                (b[1] & 0xFF) << 16 |
+                (b[0] & 0xFF) << 24;
+    }
+
     /**
      * long to byte[]
+     *
      * @param x source
      * @return byte[], equals to x
      */
@@ -87,4 +96,5 @@ public class CryptoUtil {
         buffer.putLong(x);
         return buffer.array();
     }
+
 }

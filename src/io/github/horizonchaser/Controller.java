@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 public class Controller {
 
     @FXML
-    private BorderPane mainBorderPane;
+    public BorderPane mainBorderPane;
 
     @FXML
     private MenuItem aboutMenuItem;
