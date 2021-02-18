@@ -1,6 +1,7 @@
 package io.github.horizonchaser;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -13,6 +14,9 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.Optional;
 
+/**
+ * @author Horizon
+ */
 public class Main extends Application {
 
     public transient static String currSaveFilePath = "";
@@ -34,13 +38,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        File defaultSaveFile = new File(CommonDefinition.defaultSaveName);
+        File defaultSaveFile = new File(CommonDefinition.DEFAULT_SAVE_NAME);
 
         if (!defaultSaveFile.exists()) {
             //TODO ask new or choose manually
             Alert newSaveOrChoose = new Alert(Alert.AlertType.INFORMATION);
             newSaveOrChoose.setTitle("Default save file not found...");
-            newSaveOrChoose.setHeaderText("JPK couldn't find default save file " + CommonDefinition.defaultSaveName + " in current dir.");
+            newSaveOrChoose.setHeaderText("JPK couldn't find default save file " + CommonDefinition.DEFAULT_SAVE_NAME + " in current dir.");
             newSaveOrChoose.setContentText("So would you choose your JPK save file manually or initialize a new one?\n");
 
             ButtonType newFileButton = new ButtonType("New Save File");
@@ -87,7 +91,16 @@ public class Main extends Application {
             loadFailedAlert.setContentText(j.getLocalizedMessage());
             loadFailedAlert.showAndWait();
 
-            System.exit(-2);
+            //TODO Maybe unsafe - mem leak
+            primaryStage.close();
+            Platform.runLater(() -> {
+                try {
+                    new Main().start(new Stage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            return;
         }
 
         AnchorPane root = FXMLLoader.load(getClass().getResource("loginConsole.fxml"));

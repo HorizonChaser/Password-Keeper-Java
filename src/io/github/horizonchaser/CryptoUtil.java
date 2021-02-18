@@ -4,9 +4,12 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * @author Horizon
+ */
 public class CryptoUtil {
 
-    private transient static final byte[] loginSalt = {119, 101, 64, 107, 67, 114, 121, 113, 116, 48};
+    private transient static final byte[] LOGIN_SALT = {119, 101, 64, 107, 67, 114, 121, 113, 116, 48};
 
     public static byte[] calUserLoginHash(String username, String password) {
         byte[] hash = null, usernameByte = username.getBytes(), passwordByte = password.getBytes();
@@ -19,23 +22,16 @@ public class CryptoUtil {
             e.printStackTrace();
         }
 
-        /*
-        byte[] unhashed = new byte[usernameByte.length + passwordByte.length + loginSalt.length];
-        System.arraycopy(usernameByte, 0, unhashed, 0, usernameByte.length);
-        System.arraycopy(passwordByte, 0, unhashed, usernameByte.length, passwordByte.length);
-        System.arraycopy(loginSalt, 0, unhashed, passwordByte.length + usernameByte.length, loginSalt.length);
-        */
-
         if (md5Digest != null) {
             md5Digest.update(usernameByte);
             md5Digest.update(passwordByte);
-            md5Digest.update(loginSalt);
+            md5Digest.update(LOGIN_SALT);
             hash = md5Digest.digest();
         }
 
         if (sha256Digest != null) {
             sha256Digest.update(hash);
-            sha256Digest.update(loginSalt);
+            sha256Digest.update(LOGIN_SALT);
             hash = sha256Digest.digest();
         }
 
@@ -77,7 +73,12 @@ public class CryptoUtil {
         return bytes;
     }
 
-    //byte 数组与 int 的相互转换
+    /**
+     * byte[] to int
+     * 
+     * @param b byte array
+     * @return int val
+     */
     public static int bytesToInt(byte[] b) {
         return b[3] & 0xFF |
                 (b[2] & 0xFF) << 8 |
@@ -96,5 +97,4 @@ public class CryptoUtil {
         buffer.putLong(x);
         return buffer.array();
     }
-
 }

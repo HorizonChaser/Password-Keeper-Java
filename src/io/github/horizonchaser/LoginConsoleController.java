@@ -2,21 +2,21 @@ package io.github.horizonchaser;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
-import javax.xml.crypto.Data;
 import java.io.File;
-import java.sql.DataTruncation;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * Login dialog and new user dialog controller class
+ * @author Horizon
+ */
 public class LoginConsoleController extends Main {
 
     @FXML
@@ -112,19 +112,17 @@ public class LoginConsoleController extends Main {
             passwordField.setText("");
 
             ((Stage) loginButton.getScene().getWindow()).close();
-            alert.showAndWait();
 
         } else {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Password or Username Incorrect");
             alert.setContentText("Failed to login.");
-            alert.showAndWait();
         }
-
+        alert.showAndWait();
     }
 
     public void showPasswordComplexity() {
-        if (newPasswordField.getText().matches(CommonDefinition.passwordPattern)) {
+        if (newPasswordField.getText().matches(CommonDefinition.PASSWORD_PATTERN)) {
             passwordStrengthIndicator.setText("Strong");
             passwordStrengthIndicator.setTextFill(Color.GREEN);
             isStrong = true;
@@ -160,6 +158,7 @@ public class LoginConsoleController extends Main {
                     + "\n    1. At least 8 characters long"
                     + "\n    2. At least contains one uppercase letter, one lowercase letter, one digit and one symbol each");
             notStrongAlert.showAndWait();
+            return;
         }
 
         if(!isRepeatCorrect) {
@@ -167,6 +166,7 @@ public class LoginConsoleController extends Main {
             notCorrectAlert.setTitle("Repeat password not matched");
             notCorrectAlert.setHeaderText("Your repeat password doesn't consist with first one. Check it :)");
             notCorrectAlert.showAndWait();
+            return;
         }
 
         Main.setKey(CryptoUtil.calUserLoginHash(newUsernameField.getText(), newPasswordField.getText()));
@@ -188,7 +188,7 @@ public class LoginConsoleController extends Main {
             return;
         }
 
-        FileUtil.initializeNewDB(selectedFile.getAbsolutePath(), Main.key);
+        FileUtil.initializeNewDB(selectedFile.getAbsolutePath());
         Alert createdAlert = new Alert(Alert.AlertType.INFORMATION, "New database created as "
                 + selectedFile.getAbsolutePath());
         createdAlert.showAndWait();

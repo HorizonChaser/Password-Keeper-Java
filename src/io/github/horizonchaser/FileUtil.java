@@ -2,6 +2,7 @@ package io.github.horizonchaser;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Optional;
 import java.util.zip.CRC32;
 
 public class FileUtil extends Main {
-    public static void initializeNewDB(String path, byte[] key) {
+    public static void initializeNewDB(String path) {
         File file = new File(path);
         if (!file.exists()) {
             try {
@@ -48,10 +49,10 @@ public class FileUtil extends Main {
         try (OutputStream outputStream = new FileOutputStream(file)) {
             List<Byte> byteList = new ArrayList<>();
 
-            for (byte b : CommonDefinition.fileHeaderSig) {
+            for (byte b : CommonDefinition.FILE_HEADER_SIG) {
                 byteList.add(b);
             }
-            for (byte b : CommonDefinition.fileHeaderVer) {
+            for (byte b : CommonDefinition.FILE_HEADER_VER) {
                 byteList.add(b);
             }
             for (byte b : Main.key) {
@@ -86,15 +87,15 @@ public class FileUtil extends Main {
         Main.currSaveFilePath = file.getAbsolutePath();
     }
 
-    public static void loadUserHashFromDB(File db) {
+    public static void loadUserHashFromDB(@NotNull File db) {
         if (!db.exists()) {
             throw new JPKFileException("File not exist: " + db.getAbsolutePath());
         }
         if (!db.canRead() || !db.canWrite()) {
             throw new JPKFileException("Permission denied on accessing " + db.getAbsolutePath());
         }
-        if (db.length() <= CommonDefinition.fileHeaderSizeInByte) {
-            throw new JPKFileException("File length not correct: at least " + (CommonDefinition.fileHeaderSizeInByte + 8)
+        if (db.length() <= CommonDefinition.FILE_HEADER_SIZE_IN_BYTE) {
+            throw new JPKFileException("File length not correct: at least " + (CommonDefinition.FILE_HEADER_SIZE_IN_BYTE + 8)
                     + " but " + db.length() + " in actual");
         }
 
@@ -110,16 +111,13 @@ public class FileUtil extends Main {
             e.printStackTrace();
         }
 
-        boolean isValidHeader = true;
-        for (int i = 0; i < CommonDefinition.fileHeaderSig.length; i++) {
-            if (buffer[i] != CommonDefinition.fileHeaderSig[i]) {
-                isValidHeader = false;
+        for (int i = 0; i < CommonDefinition.FILE_HEADER_SIG.length; i++) {
+            if (buffer[i] != CommonDefinition.FILE_HEADER_SIG[i]) {
                 throw new JPKFileException("Invalid database file header");
             }
         }
-        for (int i = 0; i < CommonDefinition.fileHeaderVer.length; i++) {
-            if (buffer[i + CommonDefinition.fileHeaderSig.length] != CommonDefinition.fileHeaderVer[i]) {
-                isValidHeader = false;
+        for (int i = 0; i < CommonDefinition.FILE_HEADER_VER.length; i++) {
+            if (buffer[i + CommonDefinition.FILE_HEADER_SIG.length] != CommonDefinition.FILE_HEADER_VER[i]) {
                 throw new JPKFileException("Invalid database file version");
             }
         }
@@ -128,7 +126,7 @@ public class FileUtil extends Main {
         crc32.reset();
         crc32.update(buffer);
         crc32Checksum = CryptoUtil.intToBytes((int) crc32.getValue());
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < crc32Buffer.length; i++) {
             if (crc32Buffer[i] != crc32Checksum[i]) {
                 throw new JPKFileException("CRC32 checksum mismatch: expected "
                         + CryptoUtil.bytesToHex(crc32Checksum) + " but " + CryptoUtil.bytesToHex(crc32Buffer) + " in actual");
