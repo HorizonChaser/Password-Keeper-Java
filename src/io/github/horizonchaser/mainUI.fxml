@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.media.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="624.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.horizonchaser.MainUIController">
+    <children>
+        <MenuBar prefHeight="29.0" prefWidth="624.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem fx:id="loadDBMenuItem" mnemonicParsing="false" onAction="#onLoadDBAction" text="Load New DB">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator></MenuItem>
+                        <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#onSaveAction" text="Save">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#onCloseMenuItem" text="Close and Exit">
+                            <accelerator>
+                                <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator></MenuItem>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem fx:id="addNewEntryMenuItem" mnemonicParsing="false" onAction="#onAddNewEntry" text="Add New Entry">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem fx:id="deleteEntryMenuItem" mnemonicParsing="false" onAction="#onDeleteEntry" text="Delete Selected Entry">
+                            <accelerator>
+                                <KeyCodeCombination alt="ANY" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator></MenuItem>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAboutMenuItem" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <ToolBar layoutY="29.0" prefHeight="45.0" prefWidth="624.0">
+            <items>
+                <Button fx:id="loadDBButton" mnemonicParsing="false" onAction="#onLoadDBAction" text="Open" />
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveAction" text="Save" />
+                <Button fx:id="addEntryButton" mnemonicParsing="false" onAction="#onAddEntryAction" text="Add" />
+            <Button fx:id="editEntryButton" mnemonicParsing="false" onAction="#onEditAction" text="Edit" />
+                <Button fx:id="deleteEntryButton" mnemonicParsing="false" onAction="#onDeleteEntryAction" text="Delete" />
+                <Button fx:id="resButton" disable="true" mnemonicParsing="false" text="Res" />
+            </items>
+        </ToolBar>
+      <TableView editable="true" layoutY="74.0" prefHeight="539.0" prefWidth="624.0">
+        <columns>
+          <TableColumn prefWidth="223.0" text="Domain" />
+          <TableColumn prefWidth="189.0" text="Username" />
+            <TableColumn minWidth="0.0" prefWidth="157.0" text="Note" />
+        </columns>
+      </TableView>
+    </children>
+</AnchorPane>

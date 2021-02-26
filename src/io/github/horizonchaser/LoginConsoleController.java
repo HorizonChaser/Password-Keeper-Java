@@ -188,7 +188,7 @@ public class LoginConsoleController extends Main {
             return;
         }
 
-        FileUtil.initializeNewDB(selectedFile.getAbsolutePath());
+        FileUtil.saveDBToFile(Main.recordEntryList, selectedFile.getAbsolutePath());
         Alert createdAlert = new Alert(Alert.AlertType.INFORMATION, "New database created as "
                 + selectedFile.getAbsolutePath());
         createdAlert.showAndWait();

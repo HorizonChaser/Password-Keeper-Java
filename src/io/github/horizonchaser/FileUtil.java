@@ -2,16 +2,25 @@ package io.github.horizonchaser;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import org.jetbrains.annotations.NotNull;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.CRC32;
 
 public class FileUtil extends Main {
-    public static void initializeNewDB(String path) {
+
+    public static void saveDBToFile(List<RecordEntry> recordEntryList, String path) {
         File file = new File(path);
         if (!file.exists()) {
             try {
@@ -58,8 +67,35 @@ public class FileUtil extends Main {
             for (byte b : Main.key) {
                 byteList.add(b);
             }
-            for (byte b : CryptoUtil.intToBytes(0)) {
-                byteList.add(b);
+
+            if (recordEntryList.size() > 0) {
+                for (byte b : CryptoUtil.intToBytes(recordEntryList.size())) {
+                    byteList.add(b);
+                }
+
+                Cipher cipher = Cipher.getInstance(CommonDefinition.DEFAULT_CIPHER_INSTANCE);
+                SecretKeySpec sKeySpec = new SecretKeySpec(Main.key, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
+                cipher.init(Cipher.ENCRYPT_MODE, sKeySpec, new IvParameterSpec(new byte[16]));
+
+                StringBuilder contentBuilder = new StringBuilder();
+                for (RecordEntry currEntry : recordEntryList) {
+                    contentBuilder.append(currEntry.getDomain());
+                    contentBuilder.append('\n');
+                    contentBuilder.append(currEntry.getUsername());
+                    contentBuilder.append('\n');
+                    contentBuilder.append(currEntry.getPassword());
+                    contentBuilder.append('\n');
+                    contentBuilder.append(currEntry.getNote());
+                    contentBuilder.append('\r');
+                }
+
+                for (byte b : cipher.doFinal(contentBuilder.toString().getBytes())){
+                    byteList.add(b);
+                }
+            } else {
+                for (byte b : CryptoUtil.intToBytes(0)) {
+                    byteList.add(b);
+                }
             }
 
             CRC32 crc32 = new CRC32();
@@ -80,14 +116,14 @@ public class FileUtil extends Main {
             }
 
             outputStream.write(buffer);
-        } catch (IOException e) {
+        } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
 
         Main.currSaveFilePath = file.getAbsolutePath();
     }
 
-    public static void loadUserHashFromDB(@NotNull File db) {
+    public static void loadUserHashFromDB(File db) {
         if (!db.exists()) {
             throw new JPKFileException("File not exist: " + db.getAbsolutePath());
         }
@@ -138,5 +174,20 @@ public class FileUtil extends Main {
         System.arraycopy(buffer, 0x2C, entryCntBytes, 0, 4);
         Main.currEntryCnt = CryptoUtil.bytesToInt(entryCntBytes);
 
+        byte[] entryEncryptBytes = new byte[(int) (db.length() - 4 - CommonDefinition.FILE_HEADER_SIZE_IN_BYTE)];
+        System.arraycopy(buffer, 0x30, entryEncryptBytes, 0, entryEncryptBytes.length);
+
+        try {
+            SecretKeySpec sKeySpec = new SecretKeySpec(Main.key, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
+            Cipher cipher = Cipher.getInstance(CommonDefinition.DEFAULT_CIPHER_INSTANCE);
+            cipher.init(Cipher.DECRYPT_MODE, sKeySpec, new IvParameterSpec(new byte[16]));
+            entryEncryptBytes = cipher.doFinal(entryEncryptBytes);
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException
+                | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+
+        String content = new String(entryEncryptBytes);
+        System.out.println(content);
     }
 }
