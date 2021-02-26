@@ -82,7 +82,7 @@ public class LoginConsoleController extends Main {
         }
 
         try {
-            FileUtil.loadUserHashFromDB(chosenFile);
+            FileUtil.loadAndParseDB(chosenFile);
         } catch (JPKFileException j) {
             Main.currSaveFilePath = "";
             currUsingField.setText("");
@@ -98,6 +98,7 @@ public class LoginConsoleController extends Main {
 
     @FXML
     void loginButtonAction(ActionEvent event) {
+        // FIXME: 2021/2/27 NOT IMPLEMENTED SECURITY - AUTO UNLOCK [HIGHEST LEVEL]
         Alert alert;
         String username = usernameField.getText(), password = passwordField.getText();
         byte[] hash = CryptoUtil.calUserLoginHash(username, password);

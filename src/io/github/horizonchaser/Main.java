@@ -114,7 +114,7 @@ public class Main extends Application {
 
         File currSaveFile = new File(currSaveFilePath);
         try {
-            FileUtil.loadUserHashFromDB(currSaveFile);
+            FileUtil.loadAndParseDB(currSaveFile);
         } catch (JPKFileException j) {
             Alert loadFailedAlert = new Alert(Alert.AlertType.ERROR);
             loadFailedAlert.setTitle("Failed to load selected database file");

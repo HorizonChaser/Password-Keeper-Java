@@ -1,7 +1,7 @@
 # JPassKeeper - A Simple Password Keeper Written in Java
 ## A Brief Intro
 
-![](https://img.shields.io/github/last-commit/HorizonChaser/Password-Keeper-Java) ![](https://badgen.net/codeclimate/maintainability/HorizonChaser/Password-Keeper-Java) ![](https://badgen.net/codeclimate/tech-debt/HorizonChaser/Password-Keeper-Java)
+![](https://img.shields.io/github/last-commit/HorizonChaser/Password-Keeper-Java) ![](https://img.shields.io/codeclimate/maintainability/HorizonChaser/Password-Keeper-Java) ![](https://img.shields.io/codeclimate/maintainability-percentage/HorizonChaser/Password-Keeper-Java)
 
 ![](https://img.shields.io/badge/Language-Java-orange.svg)  ![](https://img.shields.io/badge/Status-InDev-yellow.svg)  ![](https://img.shields.io/badge/GUI-JavaFX-blue.svg)  ![](https://img.shields.io/github/license/HorizonChaser/Password-Keeper-Java)
 

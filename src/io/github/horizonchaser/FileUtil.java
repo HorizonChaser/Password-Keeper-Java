@@ -123,7 +123,7 @@ public class FileUtil extends Main {
         Main.currSaveFilePath = file.getAbsolutePath();
     }
 
-    public static void loadUserHashFromDB(File db) {
+    public static void loadAndParseDB(File db) {
         if (!db.exists()) {
             throw new JPKFileException("File not exist: " + db.getAbsolutePath());
         }
