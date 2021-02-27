@@ -56,7 +56,7 @@ public class LoginConsoleController extends Main {
     private Pane newUserPane;
 
     @FXML
-    private TextArea currUsingField;
+    private Label currUsingField;
 
     @FXML
     private Button loginBrowseButton;
@@ -98,11 +98,12 @@ public class LoginConsoleController extends Main {
 
     @FXML
     void loginButtonAction(ActionEvent event) {
-        // FIXME: 2021/2/27 NOT IMPLEMENTED SECURITY - AUTO UNLOCK [HIGHEST LEVEL]
         Alert alert;
         String username = usernameField.getText(), password = passwordField.getText();
         byte[] hash = CryptoUtil.calUserLoginHash(username, password);
-        if (Arrays.equals(hash, Main.key)) {
+        if (Arrays.equals(hash, Main.userHash)) {
+            Main.dataKey = CryptoUtil.calDataKey(username, password);
+
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -170,11 +171,11 @@ public class LoginConsoleController extends Main {
             return;
         }
 
-        Main.setKey(CryptoUtil.calUserLoginHash(newUsernameField.getText(), newPasswordField.getText()));
+        Main.setUserHash(CryptoUtil.calUserLoginHash(newUsernameField.getText(), newPasswordField.getText()));
         newPasswordField.setText("");
         repeatField.setText("");
 
-        System.out.println(CryptoUtil.bytesToHex(Main.key));
+        System.out.println(CryptoUtil.bytesToHex(Main.userHash));
 
         FileChooser saveFileChooser = new FileChooser();
         saveFileChooser.setInitialDirectory(new File("."));

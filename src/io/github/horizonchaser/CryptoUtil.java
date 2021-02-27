@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 public class CryptoUtil {
 
     private transient static final byte[] LOGIN_SALT = {119, 101, 64, 107, 67, 114, 121, 113, 116, 48};
+    private transient static final byte[] DATA_KEY_SALT = {83, 64, 49, 116, 95, 70, 48, 95, 68, 98, 80, 48, 116, 101, 67, 116};
 
     public static byte[] calUserLoginHash(String username, String password) {
         byte[] hash = null, usernameByte = username.getBytes(), passwordByte = password.getBytes();
@@ -36,6 +37,28 @@ public class CryptoUtil {
         }
 
         return hash;
+    }
+
+    public static byte[] calDataKey(String username, String password){
+        byte[] dataKey = null, usernameByte = username.getBytes(), passwordByte = password.getBytes();
+        MessageDigest sha256Digest1 = null, sha256Digest2 = null;
+        try {
+            sha256Digest1 = MessageDigest.getInstance("SHA-256");
+            sha256Digest2 = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        if(sha256Digest1 != null && sha256Digest2 != null) {
+            sha256Digest1.update(passwordByte);
+            sha256Digest1.update(DATA_KEY_SALT);
+            sha256Digest1.update(usernameByte);
+
+            sha256Digest2.update(sha256Digest1.digest());
+            sha256Digest2.update(DATA_KEY_SALT);
+            dataKey = sha256Digest2.digest();
+        }
+        return dataKey;
     }
 
     /**

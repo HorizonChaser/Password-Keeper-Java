@@ -37,8 +37,7 @@ public class FileUtil extends Main {
             Alert confirmOverwrite = new Alert(Alert.AlertType.CONFIRMATION, "File already exists, overwrite?");
             Optional<ButtonType> result = confirmOverwrite.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                //TODO check result of delete and create
-
+                //XXX check result of delete and create
                 file.delete();
                 try {
                     file.createNewFile();
@@ -64,7 +63,7 @@ public class FileUtil extends Main {
             for (byte b : CommonDefinition.FILE_HEADER_VER) {
                 byteList.add(b);
             }
-            for (byte b : Main.key) {
+            for (byte b : Main.userHash) {
                 byteList.add(b);
             }
 
@@ -74,7 +73,7 @@ public class FileUtil extends Main {
                 }
 
                 Cipher cipher = Cipher.getInstance(CommonDefinition.DEFAULT_CIPHER_INSTANCE);
-                SecretKeySpec sKeySpec = new SecretKeySpec(Main.key, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
+                SecretKeySpec sKeySpec = new SecretKeySpec(Main.dataKey, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
                 cipher.init(Cipher.ENCRYPT_MODE, sKeySpec, new IvParameterSpec(new byte[16]));
 
                 StringBuilder contentBuilder = new StringBuilder();
@@ -169,7 +168,7 @@ public class FileUtil extends Main {
             }
         }
 
-        System.arraycopy(buffer, 0xC, Main.key, 0, 32);
+        System.arraycopy(buffer, 0xC, Main.userHash, 0, 32);
         byte[] entryCntBytes = new byte[4];
         System.arraycopy(buffer, 0x2C, entryCntBytes, 0, 4);
         Main.currEntryCnt = CryptoUtil.bytesToInt(entryCntBytes);
@@ -178,7 +177,7 @@ public class FileUtil extends Main {
         System.arraycopy(buffer, 0x30, entryEncryptBytes, 0, entryEncryptBytes.length);
 
         try {
-            SecretKeySpec sKeySpec = new SecretKeySpec(Main.key, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
+            SecretKeySpec sKeySpec = new SecretKeySpec(Main.dataKey, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
             Cipher cipher = Cipher.getInstance(CommonDefinition.DEFAULT_CIPHER_INSTANCE);
             cipher.init(Cipher.DECRYPT_MODE, sKeySpec, new IvParameterSpec(new byte[16]));
             entryEncryptBytes = cipher.doFinal(entryEncryptBytes);

@@ -3,11 +3,12 @@ package io.github.horizonchaser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class MainUIController {
-
-
     @FXML
     private Button resButton;
 
@@ -45,8 +46,15 @@ public class MainUIController {
     private Button editEntryButton;
 
     @FXML
-    void onLoadDBAction(ActionEvent event) {
+    private Label entryCntLabel;
 
+    @FXML
+    private Label saveIndicateLabel;
+
+    private boolean hasSaved = false;
+
+    @FXML
+    void onLoadDBAction(ActionEvent event) {
     }
 
     @FXML
@@ -87,5 +95,20 @@ public class MainUIController {
     @FXML
     void onDeleteEntryAction(ActionEvent event) {
 
+    }
+
+    public void refreshEntryCntLabel(int val) {
+        entryCntLabel.setText(val + "entry(s)");
+    }
+
+    public void refreshSaveIndicatorLabel(boolean save) {
+        hasSaved = save;
+        if(hasSaved) {
+            saveIndicateLabel.setText("Saved");
+            saveIndicateLabel.setTextFill(Color.GREEN);
+        }else {
+            saveIndicateLabel.setText("Unsaved");
+            saveIndicateLabel.setTextFill(Color.RED);
+        }
     }
 }

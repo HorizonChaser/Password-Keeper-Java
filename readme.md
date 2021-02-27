@@ -2,6 +2,7 @@
 ## A Brief Intro
 
 ![](https://img.shields.io/github/last-commit/HorizonChaser/Password-Keeper-Java) ![](https://img.shields.io/codeclimate/maintainability/HorizonChaser/Password-Keeper-Java) ![](https://img.shields.io/codeclimate/maintainability-percentage/HorizonChaser/Password-Keeper-Java)
+[![CodeFactor](https://www.codefactor.io/repository/github/horizonchaser/password-keeper-java/badge)](https://www.codefactor.io/repository/github/horizonchaser/password-keeper-java)
 
 ![](https://img.shields.io/badge/Language-Java-orange.svg)  ![](https://img.shields.io/badge/Status-InDev-yellow.svg)  ![](https://img.shields.io/badge/GUI-JavaFX-blue.svg)  ![](https://img.shields.io/github/license/HorizonChaser/Password-Keeper-Java)
 
@@ -15,7 +16,9 @@ It supports import/export password database as a single file with AES encryption
 
 ## Hash & Encryption Method
 
-Login hash: sha-256 ( md5 (\$name.\$pass.\$salt).\$salt )
+Login hash: sha-256( md5(\$name.\$pass.\$salt).\$salt ) 
 
-Database encryption: AES-256-CBC
+Database encryption: AES-128-CBC (may support AES-256-CBC later)
+
+Database key: sha-256( sha-256(\$pass.\$salt.\$name).\$salt )
 

@@ -6,10 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -27,16 +24,12 @@ public class Main extends Application {
 
     public transient static String currSaveFilePath = "";
     public transient static List<RecordEntry> recordEntryList = new ArrayList<>();
-    protected transient static byte[] key = new byte[32];
+    protected transient static byte[] userHash = new byte[32];
+    protected transient static byte[] dataKey = new byte[32];
     protected transient static int currEntryCnt = 0;
-    private transient static boolean isLoggedIn = false;
 
-    public static void setIsLoggedIn(boolean isLoggedIn) {
-        Main.isLoggedIn = isLoggedIn;
-    }
-
-    public static void setKey(byte[] key) {
-        Main.key = key;
+    public static void setUserHash(byte[] userHash) {
+        Main.userHash = userHash;
     }
 
     public static void main(String[] args) {
@@ -83,7 +76,7 @@ public class Main extends Application {
             }
         } else {
             Alert newSaveOrChoose = new Alert(Alert.AlertType.INFORMATION);
-            newSaveOrChoose.setTitle("Default save file not found...");
+            newSaveOrChoose.setTitle("Default Database File Not Found");
             newSaveOrChoose.setHeaderText("JPK couldn't find default save file " + CommonDefinition.DEFAULT_SAVE_NAME + " in current dir.");
             newSaveOrChoose.setContentText("So would you choose your JPK save file manually or initialize a new one?\n");
 
@@ -123,7 +116,7 @@ public class Main extends Application {
             loadFailedAlert.setContentText(j.getLocalizedMessage());
             loadFailedAlert.showAndWait();
 
-            //TODO Maybe unsafe - mem leak
+            //XXX Maybe unsafe - mem leak
             primaryStage.close();
             Platform.runLater(() -> {
                 try {
@@ -137,24 +130,40 @@ public class Main extends Application {
 
         AnchorPane loginConsolePane = FXMLLoader.load(getClass().getResource("loginConsole.fxml"));
         for (Node node : loginConsolePane.getChildren()) {
-            if (node instanceof TextArea) {
-                ((TextArea) node).setText(currSaveFilePath);
+            if (node instanceof Label) {
+                Label label = (Label)node;
+                String id = label.getId();
+                if(id!= null && id.equals("currUsingField")) {
+                    label.setText(currSaveFile.getAbsolutePath());
+                    break;
+                }
             }
         }
+        Stage loginStage = new Stage();
+        primaryStage.hide();
+        loginStage.setTitle("Login");
+        loginStage.setScene(new Scene(loginConsolePane));
+        loginStage.showAndWait();
 
-        primaryStage.setTitle("Login");
-        primaryStage.setScene(new Scene(loginConsolePane));
-        primaryStage.show();
-
-        AnchorPane mainUIPane = FXMLLoader.load(getClass().getResource("mainUI.fxml"));
-        primaryStage.setTitle("Java Password Keeper");
-        primaryStage.setScene(new Scene(mainUIPane));
-
-        // FIXME: 2021/2/27 domain and note field not able to be prased in decrypted bytes, not checked whether witten in DB
         recordEntryList.add(new RecordEntry("dom1", "test01", "123456", "note01"));
         recordEntryList.add(new RecordEntry("dom2", "test02", "6asdqdG", "note02"));
 
-        primaryStage.show();
+        AnchorPane mainUIPane = FXMLLoader.load(getClass().getResource("mainUI.fxml"));
+        Stage mainUIStage = new Stage();
+        mainUIStage.setTitle("Java Password Keeper");
+        mainUIStage.setScene(new Scene(mainUIPane));
 
+        for (Node node : mainUIPane.getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label)node;
+                String id = label.getId();
+                if(id!= null && id.equals("entryCntLabel")) {
+                    label.setText(recordEntryList.size() + " entry(s)");
+                    break;
+                }
+            }
+        }
+
+        mainUIStage.show();
     }
 }
