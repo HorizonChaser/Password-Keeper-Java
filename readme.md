@@ -1,10 +1,23 @@
 # JPassKeeper - A Simple Password Keeper Written in Java
-## A Brief Intro
-
+## Current Status
 ![](https://img.shields.io/github/last-commit/HorizonChaser/Password-Keeper-Java) ![](https://img.shields.io/codeclimate/maintainability/HorizonChaser/Password-Keeper-Java) ![](https://img.shields.io/codeclimate/maintainability-percentage/HorizonChaser/Password-Keeper-Java)
 [![CodeFactor](https://www.codefactor.io/repository/github/horizonchaser/password-keeper-java/badge)](https://www.codefactor.io/repository/github/horizonchaser/password-keeper-java)
 
-![](https://img.shields.io/badge/Language-Java-orange.svg)  ![](https://img.shields.io/badge/Status-InDev-yellow.svg)  ![](https://img.shields.io/badge/GUI-JavaFX-blue.svg)  ![](https://img.shields.io/github/license/HorizonChaser/Password-Keeper-Java)
+![](https://img.shields.io/badge/Language-Java-orange.svg)  ![](https://img.shields.io/badge/Status-InDev%20(Alpha)-yellow.svg)  ![](https://img.shields.io/badge/GUI-JavaFX-blue.svg)  ![](https://img.shields.io/github/license/HorizonChaser/Password-Keeper-Java)
+
+InDev: In development, there would be changes in the project
+
+Alpha: Most major functions have been implemented, minor ones would be implemented as soon as first refactor finished
+
+## To-Do List
+- [x] Default database detect and manually choose
+- [x] Database import/export and integrity check 
+- [x] Main UI implementation
+- [ ] Main UI function implementation - 60% done
+- [ ] **Refactor and improve maintainability**
+
+## A Brief Intro
+
 
 JPassKeeper (abbr. JPK) is a simple password written in JavaFX. 
 
@@ -21,4 +34,6 @@ Login hash: sha-256( md5(\$name.\$pass.\$salt).\$salt )
 Database encryption: AES-128-CBC (may support AES-256-CBC later)
 
 Database key: sha-256( sha-256(\$pass.\$salt.\$name).\$salt )
+
+Database verify: CRC-32
 

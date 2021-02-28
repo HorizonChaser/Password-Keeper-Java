@@ -54,9 +54,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         File defaultSaveFile = new File(CommonDefinition.DEFAULT_SAVE_NAME);
 
+        /*
         //TEST
         recordEntryList.add(new RecordEntry("dom1", "test01", "123456", "note01"));
         recordEntryList.add(new RecordEntry("dom2", "test02", "6asdqdG", "note02"));
+        */
 
         if (defaultSaveFile.exists()) {
             Alert loadDefaultOrChoose = new Alert(Alert.AlertType.INFORMATION);

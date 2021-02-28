@@ -55,7 +55,7 @@
                 <Button fx:id="addEntryButton" mnemonicParsing="false" onAction="#onAddEntryAction" text="Add" />
             <Button fx:id="editEntryButton" mnemonicParsing="false" onAction="#onEditAction" text="Edit" />
                 <Button fx:id="deleteEntryButton" mnemonicParsing="false" onAction="#onDeleteEntryAction" text="Delete" />
-                <Button fx:id="resButton" disable="true" mnemonicParsing="false" text="Res" />
+                <Button fx:id="resButton" mnemonicParsing="false" onAction="#onResButtonAction" text="Res [Test Add]" />
             </items>
         </ToolBar>
       <TableView fx:id="mainTable" editable="true" layoutY="74.0" prefHeight="544.0" prefWidth="624.0" />

@@ -173,6 +173,10 @@ public class FileUtil extends Main {
         System.arraycopy(buffer, 0x2C, entryCntBytes, 0, 4);
         Main.currEntryCnt = CryptoUtil.bytesToInt(entryCntBytes);
 
+        if(Main.currEntryCnt == 0) {
+            return; //no entry exist, just return
+        }
+
         byte[] entryEncryptBytes = new byte[(int) (db.length() - 4 - CommonDefinition.FILE_HEADER_SIZE_IN_BYTE)];
         System.arraycopy(buffer, 0x30, entryEncryptBytes, 0, entryEncryptBytes.length);
 
@@ -187,6 +191,13 @@ public class FileUtil extends Main {
         }
 
         String content = new String(entryEncryptBytes);
-        System.out.println(content);
+        String[] entryArray = content.split("\r");
+        for(String currEntry : entryArray) {
+            String[] currEntrySplit = currEntry.split("\n");
+            Main.recordEntryList.add(
+                    new RecordEntry(currEntrySplit[0], currEntrySplit[1],currEntrySplit[2],currEntrySplit[3])
+            );
+        }
+        System.out.println("Loaded " + Main.recordEntryList.size() + " from db");
     }
 }

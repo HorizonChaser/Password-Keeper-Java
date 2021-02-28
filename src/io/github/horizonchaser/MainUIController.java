@@ -118,6 +118,13 @@ public class MainUIController extends Main {
 
     }
 
+    @FXML
+    void onResButtonAction(ActionEvent event) {
+        RecordEntry addEntry = new RecordEntry("testAdd", "testUserAdd", "123456a", "noter");
+        recordEntryList.add(addEntry);
+        entryObservableList.add(addEntry);
+    }
+
     public void refreshEntryCntLabel(int val) {
         entryCntLabel.setText(val + "entry(s)");
     }
@@ -149,18 +156,18 @@ public class MainUIController extends Main {
         entryObservableList = FXCollections.observableArrayList();
 
         domainColumn = new TableColumn("Domain");
-        domainColumn.setMinWidth(200);
+        domainColumn.setMinWidth(210);
         domainColumn.setCellValueFactory(
                 new PropertyValueFactory<>("domain")
         );
 
         usernameColumn = new TableColumn("Username");
-        usernameColumn.setMinWidth(200);
+        usernameColumn.setMinWidth(210);
         usernameColumn.setCellValueFactory(
                 new PropertyValueFactory<>("username")
         );
         noteColumn = new TableColumn("Note");
-        noteColumn.setMinWidth(200);
+        noteColumn.setMinWidth(210);
         noteColumn.setCellValueFactory(
                 new PropertyValueFactory<>("note")
         );
