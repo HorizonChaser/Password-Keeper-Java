@@ -61,6 +61,9 @@ public class LoginConsoleController extends Main {
     @FXML
     private Button loginBrowseButton;
 
+    @FXML
+    private TableView mainTable;
+
     private boolean isStrong = false, isRepeatCorrect = false;
 
     @FXML
@@ -114,7 +117,6 @@ public class LoginConsoleController extends Main {
             passwordField.setText("");
 
             ((Stage) loginButton.getScene().getWindow()).close();
-
         } else {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Password or Username Incorrect");

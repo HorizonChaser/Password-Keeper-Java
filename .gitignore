@@ -1,0 +1,6 @@
+#JPK database for tests
+test*.JPK
+
+#IDEA out dir
+out/
+

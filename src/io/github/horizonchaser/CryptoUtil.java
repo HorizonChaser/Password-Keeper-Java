@@ -40,7 +40,7 @@ public class CryptoUtil {
     }
 
     public static byte[] calDataKey(String username, String password){
-        byte[] dataKey = null, usernameByte = username.getBytes(), passwordByte = password.getBytes();
+        byte[] hash = null, usernameByte = username.getBytes(), passwordByte = password.getBytes();
         MessageDigest sha256Digest1 = null, sha256Digest2 = null;
         try {
             sha256Digest1 = MessageDigest.getInstance("SHA-256");
@@ -56,9 +56,9 @@ public class CryptoUtil {
 
             sha256Digest2.update(sha256Digest1.digest());
             sha256Digest2.update(DATA_KEY_SALT);
-            dataKey = sha256Digest2.digest();
+            hash = sha256Digest2.digest();
         }
-        return dataKey;
+        return hash;
     }
 
     /**

@@ -6,7 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -50,6 +53,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         File defaultSaveFile = new File(CommonDefinition.DEFAULT_SAVE_NAME);
+
+        //TEST
+        recordEntryList.add(new RecordEntry("dom1", "test01", "123456", "note01"));
+        recordEntryList.add(new RecordEntry("dom2", "test02", "6asdqdG", "note02"));
 
         if (defaultSaveFile.exists()) {
             Alert loadDefaultOrChoose = new Alert(Alert.AlertType.INFORMATION);
@@ -131,9 +138,9 @@ public class Main extends Application {
         AnchorPane loginConsolePane = FXMLLoader.load(getClass().getResource("loginConsole.fxml"));
         for (Node node : loginConsolePane.getChildren()) {
             if (node instanceof Label) {
-                Label label = (Label)node;
+                Label label = (Label) node;
                 String id = label.getId();
-                if(id!= null && id.equals("currUsingField")) {
+                if (id != null && id.equals("currUsingField")) {
                     label.setText(currSaveFile.getAbsolutePath());
                     break;
                 }
@@ -145,9 +152,14 @@ public class Main extends Application {
         loginStage.setScene(new Scene(loginConsolePane));
         loginStage.showAndWait();
 
-        recordEntryList.add(new RecordEntry("dom1", "test01", "123456", "note01"));
-        recordEntryList.add(new RecordEntry("dom2", "test02", "6asdqdG", "note02"));
+        try {
+            MainUIController mainUIController = new MainUIController();
+            mainUIController.start(primaryStage);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
+        /*
         AnchorPane mainUIPane = FXMLLoader.load(getClass().getResource("mainUI.fxml"));
         Stage mainUIStage = new Stage();
         mainUIStage.setTitle("Java Password Keeper");
@@ -163,7 +175,7 @@ public class Main extends Application {
                 }
             }
         }
-
         mainUIStage.show();
+        */
     }
 }

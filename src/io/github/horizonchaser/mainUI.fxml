@@ -58,13 +58,8 @@
                 <Button fx:id="resButton" disable="true" mnemonicParsing="false" text="Res" />
             </items>
         </ToolBar>
-      <TableView editable="true" layoutY="74.0" prefHeight="539.0" prefWidth="624.0">
-        <columns>
-          <TableColumn prefWidth="223.0" text="Domain" />
-          <TableColumn prefWidth="189.0" text="Username" />
-            <TableColumn minWidth="0.0" prefWidth="157.0" text="Note" />
-        </columns>
-      </TableView>
-      <Label fx:id="entryCntLabel" layoutY="617.0" text="Label" />
+      <TableView fx:id="mainTable" editable="true" layoutY="74.0" prefHeight="544.0" prefWidth="624.0" />
+      <Label fx:id="entryCntLabel" layoutX="3.0" layoutY="620.0" text="x entry" />
+      <Label fx:id="saveIndicateLabel" layoutX="566.0" layoutY="620.0" text="Unsaved" textFill="RED" />
     </children>
 </AnchorPane>

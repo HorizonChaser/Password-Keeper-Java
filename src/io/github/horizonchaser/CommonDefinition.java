@@ -10,7 +10,7 @@ public class CommonDefinition {
 
     public static final String DEFAULT_SAVE_NAME = "default_save.jpk";
 
-    //TODO: Disabled pswd complexity check for test only
+    //XXX Disabled pswd complexity check for test only
 
     // public static final String PASSWORD_PATTERN = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
     public static final String PASSWORD_PATTERN = "[1-9]\\d*";

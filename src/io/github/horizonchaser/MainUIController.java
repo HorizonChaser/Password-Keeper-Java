@@ -1,14 +1,34 @@
 package io.github.horizonchaser;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
-public class MainUIController {
+import static io.github.horizonchaser.Main.recordEntryList;
+
+
+public class MainUIController extends Main {
+
+    public  ObservableList<RecordEntry> entryObservableList;
+
+    @FXML
+    public TableView<RecordEntry> mainTable;
+
+    private TableColumn domainColumn;
+
+    private TableColumn usernameColumn;
+
+    private TableColumn noteColumn;
+
     @FXML
     private Button resButton;
 
@@ -46,10 +66,10 @@ public class MainUIController {
     private Button editEntryButton;
 
     @FXML
-    private Label entryCntLabel;
+    public Label entryCntLabel = new Label();
 
     @FXML
-    private Label saveIndicateLabel;
+    public Label saveIndicateLabel;
 
     private boolean hasSaved = false;
 
@@ -59,7 +79,8 @@ public class MainUIController {
 
     @FXML
     void onSaveAction(ActionEvent event) {
-        FileUtil.saveDBToFile(Main.recordEntryList, Main.currSaveFilePath);
+        FileUtil.saveDBToFile(recordEntryList, Main.currSaveFilePath);
+        entryCntLabel.setText(recordEntryList.size() + " entry(s)!");
     }
 
     @FXML
@@ -103,12 +124,52 @@ public class MainUIController {
 
     public void refreshSaveIndicatorLabel(boolean save) {
         hasSaved = save;
-        if(hasSaved) {
+        if (hasSaved) {
             saveIndicateLabel.setText("Saved");
             saveIndicateLabel.setTextFill(Color.GREEN);
-        }else {
+        } else {
             saveIndicateLabel.setText("Unsaved");
             saveIndicateLabel.setTextFill(Color.RED);
         }
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        AnchorPane mainUIPane = FXMLLoader.load(getClass().getResource("mainUI.fxml"));
+        Scene scene = new Scene(mainUIPane);
+        primaryStage.setTitle("Java Password Keeper");
+        primaryStage.setScene(scene);
+
+        primaryStage.show();
+    }
+
+    @FXML
+    public void initialize(){
+        entryObservableList = FXCollections.observableArrayList();
+
+        domainColumn = new TableColumn("Domain");
+        domainColumn.setMinWidth(200);
+        domainColumn.setCellValueFactory(
+                new PropertyValueFactory<>("domain")
+        );
+
+        usernameColumn = new TableColumn("Username");
+        usernameColumn.setMinWidth(200);
+        usernameColumn.setCellValueFactory(
+                new PropertyValueFactory<>("username")
+        );
+        noteColumn = new TableColumn("Note");
+        noteColumn.setMinWidth(200);
+        noteColumn.setCellValueFactory(
+                new PropertyValueFactory<>("note")
+        );
+
+        entryObservableList.addAll(recordEntryList);
+        mainTable.setItems(entryObservableList);
+        mainTable.getColumns().addAll(domainColumn, usernameColumn, noteColumn);
+
+        entryCntLabel.setText(Main.recordEntryList.size() + " entry(s)");
+        refreshSaveIndicatorLabel(true);
     }
 }
