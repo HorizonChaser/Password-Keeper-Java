@@ -1,6 +1,5 @@
 package io.github.horizonchaser;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,8 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import static io.github.horizonchaser.Main.recordEntryList;
 
 
 public class MainUIController extends Main {
@@ -72,6 +69,8 @@ public class MainUIController extends Main {
     public Label saveIndicateLabel;
 
     private boolean hasSaved = false;
+    protected static RecordEntry currSelect = null;
+    private static RecordEntry prevSelect = null;
 
     @FXML
     void onLoadDBAction(ActionEvent event) {
@@ -110,7 +109,19 @@ public class MainUIController extends Main {
 
     @FXML
     void onEditAction(ActionEvent event) {
+        if (currSelect == null) {
+            editEntryButton.setDisable(true);
+            return;
+        }
 
+        try {
+            EditConsoleController editConsoleController = new EditConsoleController();
+            editConsoleController.start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        entryObservableList.clear();
+        entryObservableList.addAll(Main.recordEntryList);
     }
 
     @FXML
@@ -122,7 +133,36 @@ public class MainUIController extends Main {
     void onResButtonAction(ActionEvent event) {
         RecordEntry addEntry = new RecordEntry("testAdd", "testUserAdd", "123456a", "noter");
         recordEntryList.add(addEntry);
-        entryObservableList.add(addEntry);
+
+        entryObservableList.clear();
+        entryObservableList.addAll(Main.recordEntryList);
+        //entryObservableList.add(addEntry);
+    }
+
+    @FXML
+    void onMainTableClicked() {
+        RecordEntry currEntry = mainTable.getSelectionModel().getSelectedItem();
+        if (currEntry == null) {
+            System.out.println("NOT SELECTED");
+            editEntryButton.setDisable(true);
+            currSelect = null;
+        } else {
+            currSelect = currEntry;
+            if(currSelect.equals(prevSelect)) {
+                mainTable.getSelectionModel().clearSelection();
+                prevSelect = currSelect = null;
+                editEntryButton.setDisable(true);
+                return;
+            } else {
+                prevSelect = currSelect;
+            }
+
+            System.out.println(prevSelect.getDomain());
+            System.out.println(currSelect.getDomain());
+            editEntryButton.setDisable(false);
+            currSelect = currEntry;
+        }
+
     }
 
     public void refreshEntryCntLabel(int val) {
@@ -147,12 +187,14 @@ public class MainUIController extends Main {
         Scene scene = new Scene(mainUIPane);
         primaryStage.setTitle("Java Password Keeper");
         primaryStage.setScene(scene);
+        primaryStage.resizableProperty().setValue(false);
 
         primaryStage.show();
     }
 
     @FXML
     public void initialize(){
+        editEntryButton.setDisable(true);
         entryObservableList = FXCollections.observableArrayList();
 
         domainColumn = new TableColumn("Domain");

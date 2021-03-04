@@ -54,10 +54,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         File defaultSaveFile = new File(CommonDefinition.DEFAULT_SAVE_NAME);
 
-        /*
         //TEST
+        /*
         recordEntryList.add(new RecordEntry("dom1", "test01", "123456", "note01"));
-        recordEntryList.add(new RecordEntry("dom2", "test02", "6asdqdG", "note02"));
+        recordEntryList.add(new RecordEntry("dom2", "test02", "testPassword01", "note02"));
         */
 
         if (defaultSaveFile.exists()) {
@@ -115,6 +115,34 @@ public class Main extends Application {
         }
 
         File currSaveFile = new File(currSaveFilePath);
+        AnchorPane loginConsolePane = FXMLLoader.load(getClass().getResource("loginConsole.fxml"));
+        for (Node node : loginConsolePane.getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                String id = label.getId();
+                if (id != null && id.equals("currUsingField")) {
+                    label.setText(currSaveFile.getAbsolutePath());
+                    break;
+                }
+            }
+        }
+        Stage loginStage = new Stage();
+        loginStage.setOnCloseRequest(event -> {
+            Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert2.setTitle("Exit");
+            alert2.setHeaderText("Are you sure to exit");
+            Optional<ButtonType> result = alert2.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                System.exit(1);
+            } else {
+                event.consume();
+            }
+        });
+        primaryStage.hide();
+        loginStage.setTitle("Login");
+        loginStage.setScene(new Scene(loginConsolePane));
+        loginStage.showAndWait();
+
         try {
             FileUtil.loadAndParseDB(currSaveFile);
         } catch (JPKFileException j) {
@@ -137,47 +165,11 @@ public class Main extends Application {
             return;
         }
 
-        AnchorPane loginConsolePane = FXMLLoader.load(getClass().getResource("loginConsole.fxml"));
-        for (Node node : loginConsolePane.getChildren()) {
-            if (node instanceof Label) {
-                Label label = (Label) node;
-                String id = label.getId();
-                if (id != null && id.equals("currUsingField")) {
-                    label.setText(currSaveFile.getAbsolutePath());
-                    break;
-                }
-            }
-        }
-        Stage loginStage = new Stage();
-        primaryStage.hide();
-        loginStage.setTitle("Login");
-        loginStage.setScene(new Scene(loginConsolePane));
-        loginStage.showAndWait();
-
         try {
             MainUIController mainUIController = new MainUIController();
             mainUIController.start(primaryStage);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-
-        /*
-        AnchorPane mainUIPane = FXMLLoader.load(getClass().getResource("mainUI.fxml"));
-        Stage mainUIStage = new Stage();
-        mainUIStage.setTitle("Java Password Keeper");
-        mainUIStage.setScene(new Scene(mainUIPane));
-
-        for (Node node : mainUIPane.getChildren()) {
-            if (node instanceof Label) {
-                Label label = (Label)node;
-                String id = label.getId();
-                if(id!= null && id.equals("entryCntLabel")) {
-                    label.setText(recordEntryList.size() + " entry(s)");
-                    break;
-                }
-            }
-        }
-        mainUIStage.show();
-        */
     }
 }
