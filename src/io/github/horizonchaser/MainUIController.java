@@ -63,7 +63,7 @@ public class MainUIController extends Main {
     private Button editEntryButton;
 
     @FXML
-    public Label entryCntLabel = new Label();
+    public Label entryCntLabel;
 
     @FXML
     public Label saveIndicateLabel;
@@ -80,6 +80,7 @@ public class MainUIController extends Main {
     void onSaveAction(ActionEvent event) {
         FileUtil.saveDBToFile(recordEntryList, Main.currSaveFilePath);
         entryCntLabel.setText(recordEntryList.size() + " entry(s)!");
+        refreshSaveIndicatorLabel(true);
     }
 
     @FXML
@@ -122,6 +123,7 @@ public class MainUIController extends Main {
         }
         entryObservableList.clear();
         entryObservableList.addAll(Main.recordEntryList);
+        refreshSaveIndicatorLabel(false);
     }
 
     @FXML

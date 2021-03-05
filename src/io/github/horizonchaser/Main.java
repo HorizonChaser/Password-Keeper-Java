@@ -26,7 +26,7 @@ import java.util.Optional;
 public class Main extends Application {
 
     public transient static String currSaveFilePath = "";
-    public transient static List<RecordEntry> recordEntryList = new ArrayList<>();
+    public final transient static List<RecordEntry> recordEntryList = new ArrayList<>();
     protected transient static byte[] userHash = new byte[32];
     protected transient static byte[] dataKey = new byte[32];
     protected transient static int currEntryCnt = 0;

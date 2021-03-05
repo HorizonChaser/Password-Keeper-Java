@@ -62,7 +62,7 @@ public class EditConsoleController extends Main {
             currEditEntry.setPassword(MainUIController.currSelect.getPassword());
         }
 
-        //FIXME modification on MainUIController.currselect WON'T affect Main.recordEntryList
+        //FIXME modification on MainUIController.currSelect WON'T affect Main.recordEntryList
         //PRIORITY 0
         MainUIController.currSelect = currEditEntry;
         currEditEntry = null;
