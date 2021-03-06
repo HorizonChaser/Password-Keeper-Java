@@ -7,7 +7,7 @@ public class RecordEntry {
     private String username;
     private String password;
     private String note;
-    private final int hashCode;
+    public final int hashCode;
 
     public RecordEntry(String domain, String username, String password, String note) {
         this.domain = domain;

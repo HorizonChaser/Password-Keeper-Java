@@ -69,8 +69,9 @@ public class MainUIController extends Main {
     public Label saveIndicateLabel;
 
     private boolean hasSaved = false;
-    protected static RecordEntry currSelect = null;
-    private static RecordEntry prevSelect = null;
+
+    protected static int currSelectHash = -1;
+    private static int prevSelectHash = -1;
 
     @FXML
     void onLoadDBAction(ActionEvent event) {
@@ -90,7 +91,15 @@ public class MainUIController extends Main {
 
     @FXML
     void onAddNewEntry(ActionEvent event) {
-
+        try {
+            NewEntryConsoleController newEntryConsoleController = new NewEntryConsoleController();
+            newEntryConsoleController.start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        entryObservableList.clear();
+        entryObservableList.addAll(Main.recordEntryList);
+        refreshSaveIndicatorLabel(false);
     }
 
     @FXML
@@ -110,7 +119,7 @@ public class MainUIController extends Main {
 
     @FXML
     void onEditAction(ActionEvent event) {
-        if (currSelect == null) {
+        if (currSelectHash == -1) {
             editEntryButton.setDisable(true);
             return;
         }
@@ -147,24 +156,17 @@ public class MainUIController extends Main {
         if (currEntry == null) {
             System.out.println("NOT SELECTED");
             editEntryButton.setDisable(true);
-            currSelect = null;
         } else {
-            currSelect = currEntry;
-            if(currSelect.equals(prevSelect)) {
+            if(currEntry.hashCode == prevSelectHash) {
                 mainTable.getSelectionModel().clearSelection();
-                prevSelect = currSelect = null;
+                prevSelectHash = -1;
                 editEntryButton.setDisable(true);
                 return;
             } else {
-                prevSelect = currSelect;
+                prevSelectHash = currEntry.hashCode;
             }
-
-            System.out.println(prevSelect.getDomain());
-            System.out.println(currSelect.getDomain());
             editEntryButton.setDisable(false);
-            currSelect = currEntry;
         }
-
     }
 
     public void refreshEntryCntLabel(int val) {
@@ -220,7 +222,7 @@ public class MainUIController extends Main {
         mainTable.setItems(entryObservableList);
         mainTable.getColumns().addAll(domainColumn, usernameColumn, noteColumn);
 
-        entryCntLabel.setText(Main.recordEntryList.size() + " entry(s)");
+        refreshEntryCntLabel(Main.recordEntryList.size());
         refreshSaveIndicatorLabel(true);
     }
 }

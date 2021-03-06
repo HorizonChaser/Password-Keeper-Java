@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="432.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.horizonchaser.NewEntryConsoleController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="432.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.horizonchaser.NewEntryConsoleController">
    <children>
       <Label layoutX="14.0" layoutY="14.0" text="Add new entry">
          <font>
@@ -21,8 +21,7 @@
       <TextField fx:id="usernameTextField" layoutX="106.0" layoutY="128.0" prefHeight="28.0" prefWidth="264.0" />
       <TextField fx:id="passwordTextField" layoutX="106.0" layoutY="169.0" prefHeight="28.0" prefWidth="264.0" />
       <TextField fx:id="noteTextField" layoutX="106.0" layoutY="215.0" prefHeight="28.0" prefWidth="264.0" />
-      <CheckBox fx:id="showPasswordCheckBox" layoutX="106.0" layoutY="263.0" mnemonicParsing="false" onAction="#onPasswordCheckBoxAction" text="Show Password" />
-      <Button fx:id="saveButton" layoutX="66.0" layoutY="310.0" mnemonicParsing="false" onAction="#onSaveAction" text="Save" />
-      <Button fx:id="cancelButton" layoutX="309.0" layoutY="310.0" mnemonicParsing="false" onAction="#onCancelAction" text="Cancel" />
+      <Button fx:id="saveButton" layoutX="65.0" layoutY="269.0" mnemonicParsing="false" onAction="#onSaveAction" text="Save" />
+      <Button fx:id="cancelButton" layoutX="308.0" layoutY="269.0" mnemonicParsing="false" onAction="#onCancelAction" text="Cancel" />
    </children>
 </AnchorPane>
