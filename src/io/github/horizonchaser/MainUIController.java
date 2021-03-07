@@ -100,7 +100,14 @@ public class MainUIController extends Main {
 
     @FXML
     void onAddEntryAction(ActionEvent event) {
-
+        try {
+            NewEntryConsoleController newEntryConsoleController = new NewEntryConsoleController();
+            newEntryConsoleController.start(new Stage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        refreshSaveIndicatorLabel(false);
+        refreshEntryCntLabel(Main.recordEntryList.size());
     }
 
     @FXML
@@ -109,20 +116,27 @@ public class MainUIController extends Main {
             editEntryButton.setDisable(true);
             return;
         }
-
         try {
             EditConsoleController editConsoleController = new EditConsoleController();
             editConsoleController.start(new Stage());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         refreshSaveIndicatorLabel(false);
     }
 
     @FXML
     void onDeleteEntryAction(ActionEvent event) {
+        if (currSelect == null) {
+            deleteEntryButton.setDisable(true);
+            return;
+        }
+        Main.recordEntryList.remove(currSelect);
+        currSelect = null;
+        deleteEntryButton.setDisable(true);
 
+        entryObservableList.clear();
+        entryObservableList.addAll(Main.recordEntryList);
     }
 
     @FXML
@@ -132,7 +146,6 @@ public class MainUIController extends Main {
 
         entryObservableList.clear();
         entryObservableList.addAll(Main.recordEntryList);
-        //entryObservableList.add(addEntry);
     }
 
     @FXML
@@ -141,6 +154,7 @@ public class MainUIController extends Main {
         if (currEntry == null) {
             System.out.println("NOT SELECTED");
             editEntryButton.setDisable(true);
+            deleteEntryButton.setDisable(true);
             currSelect = null;
         } else {
             currSelect = currEntry;
@@ -148,6 +162,7 @@ public class MainUIController extends Main {
                 mainTable.getSelectionModel().clearSelection();
                 prevSelect = currSelect = null;
                 editEntryButton.setDisable(true);
+                deleteEntryButton.setDisable(true);
                 return;
             } else {
                 prevSelect = currSelect;
@@ -156,13 +171,13 @@ public class MainUIController extends Main {
             System.out.println(prevSelect.getDomain());
             System.out.println(currSelect.getDomain());
             editEntryButton.setDisable(false);
+            deleteEntryButton.setDisable(false);
             currSelect = currEntry;
         }
-
     }
 
     public void refreshEntryCntLabel(int val) {
-        entryCntLabel.setText(val + "entry(s)");
+        entryCntLabel.setText(val + " entry(s)");
     }
 
     public void refreshSaveIndicatorLabel(boolean save) {
@@ -191,6 +206,12 @@ public class MainUIController extends Main {
     @FXML
     public void initialize() {
         editEntryButton.setDisable(true);
+        deleteEntryButton.setDisable(true);
+
+        loadDBButton.setDisable(true);
+        resButton.setVisible(false);
+        resButton.setDisable(true);
+
         entryObservableList = FXCollections.observableArrayList();
 
         domainColumn = new TableColumn("Domain");
@@ -214,7 +235,7 @@ public class MainUIController extends Main {
         mainTable.setItems(entryObservableList);
         mainTable.getColumns().addAll(domainColumn, usernameColumn, noteColumn);
 
-        entryCntLabel.setText(Main.recordEntryList.size() + " entry(s)");
+        refreshEntryCntLabel(Main.recordEntryList.size());
         refreshSaveIndicatorLabel(true);
     }
 }

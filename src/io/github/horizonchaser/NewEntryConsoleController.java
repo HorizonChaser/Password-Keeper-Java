@@ -17,9 +17,6 @@ public class NewEntryConsoleController extends Main {
     private TextField passwordTextField;
 
     @FXML
-    private CheckBox showPasswordCheckBox;
-
-    @FXML
     private Button cancelButton;
 
     @FXML
@@ -34,35 +31,21 @@ public class NewEntryConsoleController extends Main {
     @FXML
     private TextField usernameTextField;
 
-    private transient String password;
-    private transient boolean isPasswordSet = false;
-
-    @FXML
-    void onPasswordCheckBoxAction(ActionEvent event) {
-        if (!showPasswordCheckBox.isSelected()) {
-            passwordTextField.setText("********");
-            if (isPasswordSet && passwordTextField.getText() != null) {
-                password = passwordTextField.getText();
-                isPasswordSet = true;
-            }
-        } else {
-            passwordTextField.setText(password);
-        }
-    }
-
     @FXML
     void onSaveAction(ActionEvent event) {
-        if (domainTextField.getText() == null || usernameTextField.getText() == null || !isPasswordSet || noteTextField.getText() == null) {
+        if (domainTextField.getText() == null || usernameTextField.getText() == null
+                || passwordTextField.getText() == null || noteTextField.getText() == null) {
             Alert notFinishedAlert = new Alert(Alert.AlertType.ERROR);
             notFinishedAlert.setTitle("Necessary field(s) are missing");
             notFinishedAlert.setHeaderText("At least one necessary field is missing...");
             notFinishedAlert.setContentText("Please check and fill the content before save the new entry.");
             notFinishedAlert.showAndWait();
-
             return;
         }
 
-        RecordEntry newEntry = new RecordEntry(domainTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), noteTextField.getText());
+        RecordEntry newEntry = new RecordEntry(
+                domainTextField.getText(), usernameTextField.getText(),
+                passwordTextField.getText(), noteTextField.getText());
         for (RecordEntry curr : Main.recordEntryList) {
             if (curr.hashCode() == newEntry.hashCode()) {
                 Alert duplicateAlert = new Alert(Alert.AlertType.ERROR);
@@ -73,8 +56,11 @@ public class NewEntryConsoleController extends Main {
                 return;
             }
         }
-
         Main.recordEntryList.add(newEntry);
+        ((Stage)saveButton.getScene().getWindow()).close();
+        MainUIController.entryObservableList.clear();
+        MainUIController.entryObservableList.addAll(Main.recordEntryList);
+        Main.currEntryCnt++;
     }
 
     @FXML
@@ -97,6 +83,5 @@ public class NewEntryConsoleController extends Main {
 
     @FXML
     public void initialize() {
-        showPasswordCheckBox.setSelected(true);
     }
 }

@@ -23,6 +23,10 @@ public class FileUtil extends Main {
     static byte[] entryEncryptBytes;
 
     public static void saveDBToFile(List<RecordEntry> recordEntryList, String path) {
+
+        System.out.println(CryptoUtil.bytesToHex(Main.dataKey));
+        //77f1bfe54ba602fcaad771e22baf4cc97cdf70bfcb29136bb75325af3fbd1fb0
+
         File file = new File(path);
         if (!file.exists()) {
             try {
@@ -184,17 +188,18 @@ public class FileUtil extends Main {
     }
 
     public static void decryptEntryListBytes() {
+        byte[] decryptedBytes = new byte[0];
         try {
             SecretKeySpec sKeySpec = new SecretKeySpec(Main.dataKey, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
             Cipher cipher = Cipher.getInstance(CommonDefinition.DEFAULT_CIPHER_INSTANCE);
             cipher.init(Cipher.DECRYPT_MODE, sKeySpec, new IvParameterSpec(new byte[16]));
-            entryEncryptBytes = cipher.doFinal(entryEncryptBytes);
+            decryptedBytes = cipher.doFinal(entryEncryptBytes);
         } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException
                 | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
 
-        String content = new String(entryEncryptBytes);
+        String content = new String(decryptedBytes);
         String[] entryArray = content.split("\r");
         for (String currEntry : entryArray) {
             String[] currEntrySplit = currEntry.split("\n");

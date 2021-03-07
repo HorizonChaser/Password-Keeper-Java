@@ -46,10 +46,6 @@ public class RecordEntry {
         return false;
     }
 
-    public RecordEntry getCopy() {
-        return new RecordEntry(this.domain, this.username, this.password, this.note);
-    }
-
     public String getDomain() {
         return domain;
     }
