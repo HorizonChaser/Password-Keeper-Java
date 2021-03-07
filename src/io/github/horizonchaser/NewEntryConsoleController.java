@@ -52,7 +52,7 @@ public class NewEntryConsoleController extends Main {
 
     @FXML
     void onSaveAction(ActionEvent event) {
-        if (domainTextField.getText() == null || usernameTextField.getText() == null || !isPasswordSet || noteTextField.getText() == null){
+        if (domainTextField.getText() == null || usernameTextField.getText() == null || !isPasswordSet || noteTextField.getText() == null) {
             Alert notFinishedAlert = new Alert(Alert.AlertType.ERROR);
             notFinishedAlert.setTitle("Necessary field(s) are missing");
             notFinishedAlert.setHeaderText("At least one necessary field is missing...");
@@ -63,10 +63,13 @@ public class NewEntryConsoleController extends Main {
         }
 
         RecordEntry newEntry = new RecordEntry(domainTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), noteTextField.getText());
-        for(RecordEntry curr : Main.recordEntryList) {
+        for (RecordEntry curr : Main.recordEntryList) {
             if (curr.hashCode() == newEntry.hashCode()) {
-                //TODO Duplicate Alert
-
+                Alert duplicateAlert = new Alert(Alert.AlertType.ERROR);
+                duplicateAlert.setTitle("Duplicate Account Detected");
+                duplicateAlert.setHeaderText("JPK has found an entry with same username under same domain, which is not allowed...");
+                duplicateAlert.setContentText("To solve this, please check the previous account and determine which to save.");
+                duplicateAlert.showAndWait();
                 return;
             }
         }

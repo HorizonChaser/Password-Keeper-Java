@@ -25,11 +25,15 @@ import java.util.Optional;
  */
 public class Main extends Application {
 
-    public transient static String currSaveFilePath = "";
     public final transient static List<RecordEntry> recordEntryList = new ArrayList<>();
+    public transient static String currSaveFilePath = "";
     protected transient static byte[] userHash = new byte[32];
     protected transient static byte[] dataKey = new byte[32];
     protected transient static int currEntryCnt = 0;
+
+    public static void setDataKey(byte[] dataKey) {
+        Main.dataKey = dataKey;
+    }
 
     public static void setUserHash(byte[] userHash) {
         Main.userHash = userHash;
@@ -53,12 +57,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         File defaultSaveFile = new File(CommonDefinition.DEFAULT_SAVE_NAME);
-
-        //TEST
-        /*
-        recordEntryList.add(new RecordEntry("dom1", "test01", "123456", "note01"));
-        recordEntryList.add(new RecordEntry("dom2", "test02", "testPassword01", "note02"));
-        */
 
         if (defaultSaveFile.exists()) {
             Alert loadDefaultOrChoose = new Alert(Alert.AlertType.INFORMATION);
@@ -115,6 +113,28 @@ public class Main extends Application {
         }
 
         File currSaveFile = new File(currSaveFilePath);
+        try {
+            FileUtil.verifyAndLoadUserHash(currSaveFile);
+        } catch (JPKFileException j) {
+            Alert loadFailedAlert = new Alert(Alert.AlertType.ERROR);
+            loadFailedAlert.setTitle("Failed to load selected database file");
+            loadFailedAlert.setHeaderText("Due to following reason, JPK failed to load "
+                    + currSaveFile.getAbsolutePath() + "as database.");
+            loadFailedAlert.setContentText(j.getLocalizedMessage());
+            loadFailedAlert.showAndWait();
+
+            //XXX Maybe unsafe - mem leak
+            primaryStage.close();
+            Platform.runLater(() -> {
+                try {
+                    new Main().start(new Stage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            return;
+        }
+
         AnchorPane loginConsolePane = FXMLLoader.load(getClass().getResource("loginConsole.fxml"));
         for (Node node : loginConsolePane.getChildren()) {
             if (node instanceof Label) {
@@ -142,28 +162,6 @@ public class Main extends Application {
         loginStage.setTitle("Login");
         loginStage.setScene(new Scene(loginConsolePane));
         loginStage.showAndWait();
-
-        try {
-            FileUtil.loadAndParseDB(currSaveFile);
-        } catch (JPKFileException j) {
-            Alert loadFailedAlert = new Alert(Alert.AlertType.ERROR);
-            loadFailedAlert.setTitle("Failed to load selected database file");
-            loadFailedAlert.setHeaderText("Due to following reason, JPK failed to load "
-                    + currSaveFile.getAbsolutePath() + "as database.");
-            loadFailedAlert.setContentText(j.getLocalizedMessage());
-            loadFailedAlert.showAndWait();
-
-            //XXX Maybe unsafe - mem leak
-            primaryStage.close();
-            Platform.runLater(() -> {
-                try {
-                    new Main().start(new Stage());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            return;
-        }
 
         try {
             MainUIController mainUIController = new MainUIController();

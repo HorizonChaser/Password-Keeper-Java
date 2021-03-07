@@ -19,6 +19,7 @@ public class RecordEntry {
 
     /**
      * Calculate hashcode of domain and username field only
+     *
      * @return hashcode
      */
     @Override

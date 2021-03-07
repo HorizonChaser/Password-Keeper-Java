@@ -20,6 +20,8 @@ import java.util.zip.CRC32;
 
 public class FileUtil extends Main {
 
+    static byte[] entryEncryptBytes;
+
     public static void saveDBToFile(List<RecordEntry> recordEntryList, String path) {
         File file = new File(path);
         if (!file.exists()) {
@@ -88,7 +90,7 @@ public class FileUtil extends Main {
                     contentBuilder.append('\r');
                 }
 
-                for (byte b : cipher.doFinal(contentBuilder.toString().getBytes())){
+                for (byte b : cipher.doFinal(contentBuilder.toString().getBytes())) {
                     byteList.add(b);
                 }
             } else {
@@ -122,7 +124,7 @@ public class FileUtil extends Main {
         Main.currSaveFilePath = file.getAbsolutePath();
     }
 
-    public static void loadAndParseDB(File db) {
+    public static void verifyAndLoadUserHash(File db) {
         if (!db.exists()) {
             throw new JPKFileException("File not exist: " + db.getAbsolutePath());
         }
@@ -173,13 +175,15 @@ public class FileUtil extends Main {
         System.arraycopy(buffer, 0x2C, entryCntBytes, 0, 4);
         Main.currEntryCnt = CryptoUtil.bytesToInt(entryCntBytes);
 
-        if(Main.currEntryCnt == 0) {
+        if (Main.currEntryCnt == 0) {
             return; //no entry exist, just return
         }
 
-        byte[] entryEncryptBytes = new byte[(int) (db.length() - 4 - CommonDefinition.FILE_HEADER_SIZE_IN_BYTE)];
+        entryEncryptBytes = new byte[(int) (db.length() - 4 - CommonDefinition.FILE_HEADER_SIZE_IN_BYTE)];
         System.arraycopy(buffer, 0x30, entryEncryptBytes, 0, entryEncryptBytes.length);
+    }
 
+    public static void decryptEntryListBytes() {
         try {
             SecretKeySpec sKeySpec = new SecretKeySpec(Main.dataKey, CommonDefinition.ENCRYPT_ALGORITHM_NAME);
             Cipher cipher = Cipher.getInstance(CommonDefinition.DEFAULT_CIPHER_INSTANCE);
@@ -192,12 +196,11 @@ public class FileUtil extends Main {
 
         String content = new String(entryEncryptBytes);
         String[] entryArray = content.split("\r");
-        for(String currEntry : entryArray) {
+        for (String currEntry : entryArray) {
             String[] currEntrySplit = currEntry.split("\n");
             Main.recordEntryList.add(
-                    new RecordEntry(currEntrySplit[0], currEntrySplit[1],currEntrySplit[2],currEntrySplit[3])
+                    new RecordEntry(currEntrySplit[0], currEntrySplit[1], currEntrySplit[2], currEntrySplit[3])
             );
         }
-        System.out.println("Loaded " + Main.recordEntryList.size() + " from db");
     }
 }

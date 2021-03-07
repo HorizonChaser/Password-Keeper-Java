@@ -16,5 +16,5 @@ public class CommonDefinition {
     public static final String PASSWORD_PATTERN = "[1-9]\\d*";
 
     public static final String DEFAULT_CIPHER_INSTANCE = "AES/CBC/ISO10126Padding";
-    public static final String ENCRYPT_ALGORITHM_NAME ="AES";
+    public static final String ENCRYPT_ALGORITHM_NAME = "AES";
 }

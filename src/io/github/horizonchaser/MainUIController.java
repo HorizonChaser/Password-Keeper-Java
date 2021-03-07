@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class MainUIController extends Main {
 
-    public  ObservableList<RecordEntry> entryObservableList;
+    public static ObservableList<RecordEntry> entryObservableList;
 
     @FXML
     public TableView<RecordEntry> mainTable;
@@ -89,11 +89,6 @@ public class MainUIController extends Main {
     }
 
     @FXML
-    void onAddNewEntry(ActionEvent event) {
-
-    }
-
-    @FXML
     void onDeleteEntry(ActionEvent event) {
 
     }
@@ -121,8 +116,7 @@ public class MainUIController extends Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        entryObservableList.clear();
-        entryObservableList.addAll(Main.recordEntryList);
+
         refreshSaveIndicatorLabel(false);
     }
 
@@ -150,7 +144,7 @@ public class MainUIController extends Main {
             currSelect = null;
         } else {
             currSelect = currEntry;
-            if(currSelect.equals(prevSelect)) {
+            if (currSelect.equals(prevSelect)) {
                 mainTable.getSelectionModel().clearSelection();
                 prevSelect = currSelect = null;
                 editEntryButton.setDisable(true);
@@ -195,7 +189,7 @@ public class MainUIController extends Main {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         editEntryButton.setDisable(true);
         entryObservableList = FXCollections.observableArrayList();
 

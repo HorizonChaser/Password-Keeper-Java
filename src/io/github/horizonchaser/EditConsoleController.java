@@ -46,27 +46,18 @@ public class EditConsoleController extends Main {
 
     @FXML
     void onSaveAction(ActionEvent event) {
-        /*
-        if (Main.recordEntryList.contains(currEditEntry)) {
-            Alert duplicateAlert = new Alert(Alert.AlertType.ERROR);
-            duplicateAlert.setTitle("Duplicate Account Detected");
-            duplicateAlert.setHeaderText("JPK has found an entry with same username under same domain, which is not allowed...");
-            duplicateAlert.setContentText("To solve this, please check the previous account and determine which to save.");
-            duplicateAlert.showAndWait();
-            return;
-        }
-        */
         currEditEntry = new RecordEntry(domainTextField.getText(), usernameTextField.getText(),
                 passwordTextField.getText(), noteTextField.getText());
-        if(!showPasswordCheckBox.isSelected()) {
+        if (!showPasswordCheckBox.isSelected()) {
             currEditEntry.setPassword(MainUIController.currSelect.getPassword());
         }
 
-        //FIXME modification on MainUIController.currSelect WON'T affect Main.recordEntryList
-        //PRIORITY 0
-        MainUIController.currSelect = currEditEntry;
+        Main.recordEntryList.set(Main.recordEntryList.indexOf(MainUIController.currSelect), currEditEntry);
         currEditEntry = null;
-        ((Stage)passwordTextField.getScene().getWindow()).close();
+
+        MainUIController.entryObservableList.clear();
+        MainUIController.entryObservableList.addAll(Main.recordEntryList);
+        ((Stage) passwordTextField.getScene().getWindow()).close();
     }
 
     @FXML
@@ -88,7 +79,7 @@ public class EditConsoleController extends Main {
 
     @FXML
     public void initialize() {
-        currEditEntry = MainUIController.currSelect.getCopy();
+        currEditEntry = MainUIController.currSelect;
 
         domainTextField.setText(currEditEntry.getDomain());
         domainTextField.editableProperty().setValue(false);

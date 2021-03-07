@@ -39,7 +39,7 @@ public class CryptoUtil {
         return hash;
     }
 
-    public static byte[] calDataKey(String username, String password){
+    public static byte[] calDataKey(String username, String password) {
         byte[] hash = null, usernameByte = username.getBytes(), passwordByte = password.getBytes();
         MessageDigest sha256Digest1 = null, sha256Digest2 = null;
         try {
@@ -49,7 +49,7 @@ public class CryptoUtil {
             e.printStackTrace();
         }
 
-        if(sha256Digest1 != null && sha256Digest2 != null) {
+        if (sha256Digest1 != null && sha256Digest2 != null) {
             sha256Digest1.update(passwordByte);
             sha256Digest1.update(DATA_KEY_SALT);
             sha256Digest1.update(usernameByte);
@@ -98,7 +98,7 @@ public class CryptoUtil {
 
     /**
      * byte[] to int
-     * 
+     *
      * @param b byte array
      * @return int val
      */

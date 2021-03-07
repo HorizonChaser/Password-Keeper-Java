@@ -15,6 +15,7 @@ import java.util.Date;
 
 /**
  * Login dialog and new user dialog controller class
+ *
  * @author Horizon
  */
 public class LoginConsoleController extends Main {
@@ -61,9 +62,6 @@ public class LoginConsoleController extends Main {
     @FXML
     private Button loginBrowseButton;
 
-    @FXML
-    private TableView mainTable;
-
     private boolean isStrong = false, isRepeatCorrect = false;
 
     @FXML
@@ -77,7 +75,7 @@ public class LoginConsoleController extends Main {
         );
         File chosenFile = fileChooser.showOpenDialog(loginBrowseButton.getScene().getWindow());
 
-        if(chosenFile != null) {
+        if (chosenFile != null) {
             Main.currSaveFilePath = chosenFile.getAbsolutePath();
             currUsingField.setText(chosenFile.getAbsolutePath());
         } else {
@@ -85,7 +83,7 @@ public class LoginConsoleController extends Main {
         }
 
         try {
-            FileUtil.loadAndParseDB(chosenFile);
+            FileUtil.verifyAndLoadUserHash(chosenFile);
         } catch (JPKFileException j) {
             Main.currSaveFilePath = "";
             currUsingField.setText("");
@@ -105,7 +103,10 @@ public class LoginConsoleController extends Main {
         String username = usernameField.getText(), password = passwordField.getText();
         byte[] hash = CryptoUtil.calUserLoginHash(username, password);
         if (Arrays.equals(hash, Main.userHash)) {
-            Main.dataKey = CryptoUtil.calDataKey(username, password);
+            if (Main.currEntryCnt > 0) {
+                Main.dataKey = CryptoUtil.calDataKey(username, password);
+                FileUtil.decryptEntryListBytes();
+            }
 
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -154,7 +155,7 @@ public class LoginConsoleController extends Main {
         showPasswordComplexity();
         checkRepeat();
 
-        if(!isStrong) {
+        if (!isStrong) {
             Alert notStrongAlert = new Alert(Alert.AlertType.WARNING);
             notStrongAlert.setTitle("Weak password detected");
             notStrongAlert.setHeaderText("This password is used to protect your other passwords, so it needs to be especially strong.");
@@ -165,7 +166,7 @@ public class LoginConsoleController extends Main {
             return;
         }
 
-        if(!isRepeatCorrect) {
+        if (!isRepeatCorrect) {
             Alert notCorrectAlert = new Alert(Alert.AlertType.WARNING);
             notCorrectAlert.setTitle("Repeat password not matched");
             notCorrectAlert.setHeaderText("Your repeat password doesn't consist with first one. Check it :)");
@@ -174,6 +175,7 @@ public class LoginConsoleController extends Main {
         }
 
         Main.setUserHash(CryptoUtil.calUserLoginHash(newUsernameField.getText(), newPasswordField.getText()));
+        Main.setDataKey(CryptoUtil.calDataKey(newUsernameField.getText(), newPasswordField.getText()));
         newPasswordField.setText("");
         repeatField.setText("");
 
@@ -188,7 +190,7 @@ public class LoginConsoleController extends Main {
         );
         File selectedFile = saveFileChooser.showSaveDialog(newUserPane.getScene().getWindow());
 
-        if(selectedFile == null) {
+        if (selectedFile == null) {
             return;
         }
 

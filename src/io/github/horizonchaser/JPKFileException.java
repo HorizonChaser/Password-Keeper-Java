@@ -1,7 +1,6 @@
 package io.github.horizonchaser;
 
 /**
- *
  * @author Horizon
  */
 public class JPKFileException extends RuntimeException {
@@ -9,7 +8,7 @@ public class JPKFileException extends RuntimeException {
         super();
     }
 
-    public  JPKFileException(String cause) {
+    public JPKFileException(String cause) {
         super(cause);
     }
 }
